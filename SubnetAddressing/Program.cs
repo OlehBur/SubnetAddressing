@@ -32,8 +32,13 @@ foreach (var net in netHosts) {
     uint mask = 0xFFFFFFFF << step;
 
     Console.WriteLine($"\tHosts: {round}");
+    Console.WriteLine($"\tPrefix: {32-step}");
+    Console.WriteLine($"\tBin Mask: {LastBinByte(mask)}");
     Console.WriteLine($"\tMask: {QuadNum(mask)}");
+    Console.WriteLine($"\tInverted Bin Mask: {LastBinByteInvert(mask)}");
+    Console.WriteLine($"\tInverted Dec Mask: {QuadNumInvert(mask)}");
     Console.WriteLine($"\tAddress: {address + lastAddr.ToString()}");
+    Console.WriteLine($"\tBin Address: {LastBinByte(lastAddr)}");
     Console.WriteLine($"\tFirst: {address + (1 + lastAddr).ToString()}");
     lastAddr += round;
     lastAddr -= 2;
@@ -65,4 +70,20 @@ static string QuadNum(uint number) {
     byte b4 = (byte)(number & 0xFF); // Молодший байт
 
     return $"{b1}.{b2}.{b3}.{b4}";
+}
+
+static string QuadNumInvert(uint number) {
+    byte b = (byte)(number & 0xFF);
+
+    return $"{255-b}";
+}
+
+static string LastBinByte(uint numb) {
+    byte b = (byte)(numb & 0xFF);
+
+    return Convert.ToString(b, 2).PadLeft(8, '0');
+}
+
+static string LastBinByteInvert(uint numb) {
+    return new string(LastBinByte(numb).Select(x => x == '0' ? '1' : '0').ToArray());
 }
